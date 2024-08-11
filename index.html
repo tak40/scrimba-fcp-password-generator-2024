@@ -16,6 +16,18 @@
                 <h3>Generate a random password</h3>
                 <p>Never use an insecure password again.</p>
                 <button id="generate-password-btn">Generate passwords</button>
+                <label for="password-length-slider"></label>
+                <input
+                    type="range"
+                    id="password-length-slider"
+                    min="8"
+                    max="32"
+                    value="15"
+                />
+                <label for="numbers">numbers</label>
+                <input type="checkbox" id="numbers" />
+                <label for="symbols">symbols</label>
+                <input type="checkbox" id="symbols" />
                 <p id="password1"></p>
                 <p id="password2"></p>
             </section>
