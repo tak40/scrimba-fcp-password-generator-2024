@@ -19,11 +19,12 @@
     --color-dark-green: #10b981;
     --color-darker-green: #0c8a6e;
     --color-dark-blue: #273549;
+    --color-darker-blue: #1f2937;
     --color-light-purple: #f8f0ff;
     --color-medium-purple: #e0d0ff;
     --color-dark-purple: #8a2be2;
-    --color-gray: #6b7280;
     --color-light-gray: #d5d4d8;
+    --color-gray: #6b7280;
 
     /* Theme Colors */
     --background-color: var(--color-white);
@@ -46,6 +47,7 @@
     --checkbox-background: var(--color-light-purple);
     --checkbox-background-checked: var(--color-dark-purple);
     --divider-color: var(--color-light-gray);
+    --divider-color-dark: #2f3e53;
     --checkbox-focus-shadow-color: rgba(138, 43, 226, 0.25);
 
     /* Typography */
@@ -74,6 +76,17 @@
     --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
+/* ----- DARK THEME ----- */
+
+.dark-theme {
+    --background-color: var(--color-light-gray);
+    --primary-background: var(--color-darker-blue);
+    --primary-text-color: var(--color-white);
+    --secondary-text-color: var(--color-light-gray);
+    --password-background: var(--color-dark-blue);
+    --divider-color: var(--divider-color-dark);
+}
+
 /* ----- GLOBAL STYLES ----- */
 
 body {
@@ -86,7 +99,22 @@ body {
     background-color: var(--background-color);
 }
 
+body,
+h3,
+p,
+section,
+button,
+output,
+.app-divider,
+.toggle-theme {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 /* ----- TYPOGRAPHY ----- */
+
+.toggle-theme {
+    font-size: var(--font-size-lg);
+}
 
 .header__title,
 .app__title {
@@ -217,10 +245,31 @@ main {
     flex-direction: column;
     justify-content: center;
     gap: 2em;
+    position: relative;
     padding: 5em;
     background-color: var(--primary-background);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-lg);
+}
+
+.toggle-theme {
+    position: absolute;
+    top: 1.5em;
+    right: 1.5em;
+    width: 1.75em;
+    height: 1.75em;
+    background-color: var(--primary-background);
+    border: 3px dotted var(--color-medium-purple);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.toggle-theme::before {
+    content: "☀️";
+}
+
+.dark-theme .toggle-theme::before {
+    content: "🌙";
 }
 
 .app__title {

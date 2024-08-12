@@ -1,4 +1,5 @@
 // DOM ELEMENTS
+const toggleThemeBtn = document.getElementById("toggle-theme")
 const generatePasswordBtn = document.getElementById("generate-password-btn")
 const password1 = document.getElementById("password1")
 const password2 = document.getElementById("password2")
@@ -6,7 +7,7 @@ const passwordLengthSlider = document.getElementById("password-length-slider")
 const passwordLengthValue = document.getElementById("password-length-value")
 const numbersEl = document.getElementById("numbers")
 const symbolsEl = document.getElementById("symbols")
-const copyIcons = document.querySelectorAll(".app__copy-icon")
+const copyButtons = document.querySelectorAll(".app__copy-btn")
 
 // CHARACTER SETS
 
@@ -25,7 +26,16 @@ let passwordLength = 15
 // Initial character set, starts with alphabets only
 let availableCharacters = [...alphabets]
 
+let isToggleThemeBtnClicked = false
+
 // EVENT LISTENER
+
+// Toggle theme when button is clicked
+toggleThemeBtn.addEventListener("click", function () {
+    document.body.classList.toggle("dark-theme")
+    isToggleThemeBtnClicked = !isToggleThemeBtnClicked
+    console.log(isToggleThemeBtnClicked ? "Dark mode enabled" : "Dark mode disabled")
+})
 
 // Generate and display passwords when button is clicked
 generatePasswordBtn.addEventListener("click", updatePassword)
@@ -47,14 +57,15 @@ symbolsEl.addEventListener("change", function () {
 })
 
 // Copy password to clipboard when copy icon is clicked
-copyIcons.forEach(function (icon) {
-    icon.addEventListener("click", async function () {
-        const passwordElement = icon.previousElementSibling
+copyButtons.forEach(function (button) {
+    button.addEventListener("click", async function () {
+        const passwordElement = this.closest(".app__output-field").querySelector(".app__password")
         const passwordText = passwordElement.textContent
 
         try {
             await navigator.clipboard.writeText(passwordText)
             // Provide visual feedback
+            const icon = this.querySelector(".app__copy-btn-icon")
             icon.classList.remove("fa-copy")
             icon.textContent = "✓"
             icon.classList.add("copied")
