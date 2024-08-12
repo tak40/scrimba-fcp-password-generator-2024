@@ -3,8 +3,10 @@ const generatePasswordBtn = document.getElementById("generate-password-btn")
 const password1 = document.getElementById("password1")
 const password2 = document.getElementById("password2")
 const passwordLengthSlider = document.getElementById("password-length-slider")
+const passwordLengthValue = document.getElementById("password-length-value")
 const numbersEl = document.getElementById("numbers")
 const symbolsEl = document.getElementById("symbols")
+const copyIcons = document.querySelectorAll(".app__copy-icon")
 
 // CHARACTER SETS
 
@@ -31,6 +33,7 @@ generatePasswordBtn.addEventListener("click", updatePassword)
 // Update password length based on slider value
 passwordLengthSlider.addEventListener("input", function () {
     passwordLength = passwordLengthSlider.value
+    passwordLengthValue.textContent = passwordLength
 })
 
 // Toggle numbers in the available character set
@@ -41,6 +44,31 @@ numbersEl.addEventListener("change", function () {
 // Toggle symbols in the available character set
 symbolsEl.addEventListener("change", function () {
     updateAvailableCharacters(symbolsEl, symbols)
+})
+
+// Copy password to clipboard when copy icon is clicked
+copyIcons.forEach(function (icon) {
+    icon.addEventListener("click", async function () {
+        const passwordElement = icon.previousElementSibling
+        const passwordText = passwordElement.textContent
+
+        try {
+            await navigator.clipboard.writeText(passwordText)
+            // Provide visual feedback
+            icon.classList.remove("fa-copy")
+            icon.textContent = "✓"
+            icon.classList.add("copied")
+
+            // Reset icon after a short delay
+            setTimeout(function () {
+                icon.textContent = ""
+                icon.classList.remove("copied")
+                icon.classList.add("fa-copy")
+            }, 3000)
+        } catch (err) {
+            console.error("Failed to copy text: ", err)
+        }
+    })
 })
 
 // CORE FUNCTIONS

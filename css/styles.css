@@ -7,4 +7,386 @@
     margin: 0;
     padding: 0;
     font: inherit;
+    /* border: 1px dotted red; */
+}
+
+/* ----- CSS VARIABLES ----- */
+
+:root {
+    /* Color Palette */
+    --color-white: #ffffff;
+    --color-light-green: #ecfdf5;
+    --color-dark-green: #10b981;
+    --color-darker-green: #0c8a6e;
+    --color-dark-blue: #273549;
+    --color-light-purple: #f8f0ff;
+    --color-medium-purple: #e0d0ff;
+    --color-dark-purple: #8a2be2;
+    --color-gray: #6b7280;
+    --color-light-gray: #d5d4d8;
+
+    /* Theme Colors */
+    --background-color: var(--color-white);
+    --primary-background: var(--color-light-green);
+    --primary-text-color: var(--color-dark-blue);
+    --secondary-text-color: var(--color-gray);
+    --accent-color: var(--color-dark-green);
+
+    /* Component-specific Colors */
+    --button-background: var(--color-dark-green);
+    --button-background-hover: var(--color-darker-green);
+    --button-text: var(--color-white);
+    --password-background: var(--color-dark-blue);
+    --password-text: #5def92;
+    --options-background: var(--color-light-purple);
+    --options-text: #4a0e78;
+    --slider-background: var(--color-medium-purple);
+    --slider-thumb: var(--color-dark-purple);
+    --checkbox-border: var(--color-medium-purple);
+    --checkbox-background: var(--color-light-purple);
+    --checkbox-background-checked: var(--color-dark-purple);
+    --divider-color: var(--color-light-gray);
+    --checkbox-focus-shadow-color: rgba(138, 43, 226, 0.25);
+
+    /* Typography */
+    --font-primary: "Karla", sans-serif;
+    --font-secondary: "Inter", sans-serif;
+    --font-size-xs: 0.9rem;
+    --font-size-sm: 1rem;
+    --font-size-md: 1.25rem;
+    --font-size-lg: 1.5rem;
+    --font-size-xl: 2rem;
+    --font-size-xxl: 2.75rem;
+
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 700;
+    --font-weight-extra-bold: 800;
+
+    /* Border Radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 10px;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* ----- GLOBAL STYLES ----- */
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    text-align: center;
+    font-family: var(--font-primary);
+    background-color: var(--background-color);
+}
+
+/* ----- TYPOGRAPHY ----- */
+
+.header__title,
+.app__title {
+    font-size: var(--font-size-xxl);
+    font-weight: var(--font-weight-extra-bold);
+}
+
+.header__subtitle,
+.app__subtitle,
+.app__generate-btn {
+    font-size: var(--font-size-lg);
+}
+
+.app__title,
+.app__subtitle {
+    text-align: left;
+}
+
+.app__subtitle,
+.app__password {
+    font-family: var(--font-secondary);
+}
+
+.app__generate-btn,
+.app__slider-label,
+.app__character-option-label {
+    font-weight: var(--font-weight-medium);
+}
+
+.app__customization-options,
+.app__output-field {
+    font-size: var(--font-size-md);
+}
+
+.app__length-value {
+    font-weight: bold;
+}
+
+.app__copy-btn-icon {
+    font-size: var(--font-size-xl);
+}
+
+/* ----- BUTTONS ----- */
+
+.app__generate-btn,
+.app__copy-btn {
+    border: none;
+    cursor: pointer;
+}
+
+.app__generate-btn {
+    color: var(--button-text);
+    background-color: var(--button-background);
+    padding: 0.5625em 1em;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-lg);
+    transition: background-color 0.3s ease;
+}
+
+.app__generate-btn:hover {
+    background-color: var(--button-background-hover);
+}
+
+.app__generate-btn:focus {
+    outline: 2px solid var(--color-dark-purple);
+    outline-offset: 3px;
+}
+
+.app__copy-btn {
+    background: none;
+}
+
+.app__copy-btn:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 5px;
+    border-radius: var(--border-radius-sm);
+}
+
+.app__copy-btn-icon {
+    background-color: var(--password-background);
+    color: var(--options-background);
+    transition: color 0.3s ease;
+}
+
+.app__copy-btn-icon:hover {
+    color: var(--accent-color);
+}
+
+.app__copy-btn-icon.copied {
+    color: var(--accent-color);
+}
+
+/* ----- LAYOUT ----- */
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    padding: 8px;
+    z-index: 100;
+    background: var(--color-dark-blue);
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: var(--border-radius-sm);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* HEADER */
+
+.header {
+    padding: 2em 0;
+    background-color: var(--options-background);
+}
+
+/* ----- MAIN ----- */
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2em;
+    padding: 5em;
+    background-color: var(--primary-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.app__title {
+    color: var(--primary-text-color);
+}
+
+.app__title-highlight {
+    display: block;
+    color: var(--accent-color);
+}
+
+.app__subtitle {
+    color: var(--secondary-text-color);
+}
+
+/* PASSWORD OPTIONS */
+
+.app__controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5em;
+}
+
+.app__customization-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+    background-color: var(--options-background);
+    padding: 1.25em;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.app__slider-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+}
+
+.app__character-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.app__slider-label {
+    color: var(--options-text);
+}
+
+.app__slider-input {
+    -webkit-appearance: none;
+    height: 6px;
+    background: var(--slider-background);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    border-radius: 3px;
+}
+
+.app__slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.125em;
+    height: 1.125em;
+    background: var(--slider-thumb);
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.app__slider-input::-moz-range-thumb {
+    width: 1.125em;
+    height: 1.125em;
+    background: var(--slider-thumb);
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+}
+
+.app__slider-input::-ms-thumb {
+    width: 1.125em;
+    height: 1.125em;
+    background: var(--slider-thumb);
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+}
+
+.app__length-value {
+    color: var(--slider-thumb);
+}
+
+.app__character-option-label {
+    color: var(--options-text);
+}
+
+.app__character-option-input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.25em;
+    height: 1.25em;
+    border: 2px solid var(--checkbox-border);
+    border-radius: var(--border-radius-sm);
+    outline: none;
+    cursor: pointer;
+    background-color: var(--checkbox-background);
+    transition: all 0.3s ease;
+}
+
+.app__character-option-input:checked {
+    background-color: var(--checkbox-background-checked);
+    border-color: var(--checkbox-background-checked);
+}
+
+.app__character-option-input:focus {
+    box-shadow: 0 0 0 2px var(--checkbox-focus-shadow-color);
+}
+
+.app__slider-input:focus,
+.app__character-option-input:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 5px;
+    border-radius: var(--border-radius-sm);
+}
+
+/* BORDER */
+
+.app__divider {
+    border: 1px solid var(--divider-color);
+}
+
+/* PASSWORD DISPLAY  */
+
+.app__output {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2em;
+}
+
+.app__output-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em 0.7em;
+    background-color: var(--password-background);
+    width: 15em;
+    height: 2.75em;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-md);
+}
+
+.app__password {
+    color: var(--password-text);
+}
+
+.app__password:focus {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+    border-radius: var(--border-radius-sm);
+}
+
+/* ----- FOOTER ----- */
+
+.footer {
+    padding: 1em 0;
+    background-color: var(--options-background);
 }
