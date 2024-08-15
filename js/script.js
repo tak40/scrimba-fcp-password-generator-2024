@@ -1,8 +1,6 @@
 // DOM ELEMENTS
 const toggleThemeBtn = document.getElementById("toggle-theme")
 const generatePasswordBtn = document.getElementById("generate-password-btn")
-const password1 = document.getElementById("password1")
-const password2 = document.getElementById("password2")
 const passwordLengthSlider = document.getElementById("password-length-slider")
 const passwordLengthValue = document.getElementById("password-length-value")
 const numbersEl = document.getElementById("numbers")
@@ -12,17 +10,17 @@ const checkboxes = document.querySelectorAll(".app__character-option-input")
 
 // CHARACTER SETS
 
-// prettier-ignore
-const alphabets = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
-// prettier-ignore
-const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-// prettier-ignore
-const symbols = ["~","`","!","@","#","$","%","^","&","*","(",")","_","-","+","=","{","[","}","]",",","|",":",";","<",">",".","?", "/"]
+let alphabets = [..."abcdefghijklmnopqrstuvwxyz"]
+alphabets = [...alphabets, ...alphabets.map((letter) => letter.toLocaleUpperCase())]
+let numbers = [..."0123456789"]
+let symbols = [..."~`!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?"]
 
 // INITIALIZATION
 
 // Initial password length
 let passwordLength = 15
+
+let password = []
 
 // Initial character set, starts with alphabets only
 let availableCharacters = [...alphabets]
@@ -61,18 +59,79 @@ addKeydownListeners()
 
 // Update the password fields with newly generated passwords
 function updatePassword() {
-    password1.textContent = generatePassword(passwordLength)
-    password2.textContent = generatePassword(passwordLength)
+    const allOutputFields = document.querySelectorAll("output")
+    allOutputFields.forEach(function (field) {
+        field.textContent = generatePassword(passwordLength)
+    })
     adjustFontSize(passwordLength)
 }
 
 // Generate a password of a given length
 function generatePassword(length) {
-    let password = ""
-    for (let i = 0; i < length; i++) {
-        password += availableCharacters[generateRandomIndex()]
+    // Clear the password array
+    password = []
+
+    // Check number and symbol checkboxes to determine the initial characters
+    const conditions = {
+        bothChecked: numbersEl.checked && symbolsEl.checked,
+        onlyNumbersChecked: numbersEl.checked && !symbolsEl.checked,
+        onlySymbolsChecked: !numbersEl.checked && symbolsEl.checked,
+        noneChecked: !numbersEl.checked && !symbolsEl.checked,
     }
-    return password
+
+    // Get initial characters based on the conditions
+    const initialChars = getinitialChars(conditions)
+    console.log(initialChars)
+
+    // Calculate the remaining length of the password
+    const remainingLength = length - initialChars.length
+    console.log(remainingLength)
+
+    // Generate the remaining characters of the password
+    for (let i = 0; i < remainingLength; i++) {
+        password.push(availableCharacters[generateRandomIndex()])
+    }
+
+    // Combine the initial characters and the remaining password characters
+    password = [...initialChars, ...password]
+    console.log(password)
+
+    // Shuffle the password array
+    password = shuffleArray(password)
+    console.log(password)
+
+    // Convert the password array to a string
+    return password.join("")
+
+    // let password = []
+    // if(numbersEl.checked && symbolsEl.checked){
+    //     initialNumberAndSymbol = []
+    //     initialNumberAndSymbol.push(generateRandomNumber(), generateRandomSymbol())
+    //     console.log(initialNumberAndSymbol)
+
+    //     for (let i = 0; i < length - 2; i++){
+    //         password.push(availableCharacters[generateRandomIndex()])
+    //     }
+    //     password = [...initialNumberAndSymbol, ...password]
+    //     console.log(password)
+    //     password = shuffleArray(password)
+    //     console.log(password)
+    //     return password.join('')
+    // } else if (numbersEl.checked && !symbolsEl.checked){
+    //     console.log("numbers checked but symbols not checked")
+    // } else if (!numbersEl.checked && symbolsEl.checked){
+    //     console.log("symbols checked but numbers not checked")
+    // } else {
+    //     console.log("none checked")
+    // }
+}
+
+// Get initial characters based on the conditions
+function getinitialChars(conditions) {
+    if (conditions.bothChecked) return [generateRandomNumber(), generateRandomSymbol()]
+    if (conditions.onlyNumbersChecked) return [generateRandomNumber()]
+    if (conditions.onlySymbolsChecked) return [generateRandomSymbol()]
+    return []
 }
 
 // Update password length based on slider value
@@ -98,7 +157,11 @@ function updateAvailableCharacters(checkbox, charArray) {
 function handleThemeToggle() {
     document.body.classList.toggle("dark-theme")
     isToggleThemeBtnClicked = !isToggleThemeBtnClicked
-    const themeText = isToggleThemeBtnClicked ? "Dark" : "Light"
+    // Update button state
+    toggleThemeBtn.setAttribute("aria-pressed", isToggleThemeBtnClicked)
+
+    // Update theme status for screen readers
+    const themeText = `Current theme: ${isToggleThemeBtnClicked ? "Dark" : "Light"}`
     toggleThemeBtn.querySelector(".visually-hidden").textContent = themeText
     console.log(isToggleThemeBtnClicked ? "Dark mode enabled" : "Dark mode disabled")
 }
@@ -108,7 +171,6 @@ async function handleCopyClick(event) {
     const button = event.currentTarget
     const passwordElement = button.closest(".app__output-field").querySelector(".app__password")
     const passwordText = passwordElement.textContent
-
     const success = await copyToClipboard(passwordText)
     updateCopyButtonUI(button, success)
     updateScreenReaderFeedback(success)
@@ -134,10 +196,9 @@ function handleCopyButtonKeydown(event) {
 
 // Handle keydown event for checkboxes
 function handleCheckboxKeydown(event) {
-    if (event.key === " " || event.key === "Enter") {
+    if (event.key === "Enter" || event.key === " ") {
         event.preventDefault()
         this.checked = !this.checked
-        this.dispatchEvent(new Event("change", { bubbles: true }))
     }
 }
 
@@ -148,11 +209,36 @@ function generateRandomIndex() {
     return Math.floor(Math.random() * availableCharacters.length)
 }
 
+// Generate a random number from the numbers array
+function generateRandomNumber() {
+    const randomIndex = Math.floor(Math.random() * numbers.length)
+    randomNumber = numbers[randomIndex]
+    return randomNumber
+}
+
+// Generate a random symbol from the symbols array
+function generateRandomSymbol() {
+    const randomIndex = Math.floor(Math.random() * symbols.length)
+    randomSymbol = symbols[randomIndex]
+    return randomSymbol
+}
+
+// Shuffle the password array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        // Generate a random index between 0 and i
+        const j = Math.floor(Math.random() * (i + 1))
+        // Swap elements array[i] and array[j]
+        ;[array[i], array[j]] = [array[j], array[i]]
+    }
+    return array
+}
+
 // Adjust font size based on password length
 function adjustFontSize(passwordLength) {
     const passwords = document.querySelectorAll(".app__password")
     passwords.forEach((password) => {
-        if (passwordLength > 20) {
+        if (passwordLength > 17) {
             password.classList.add("long")
         } else {
             password.classList.remove("long")
